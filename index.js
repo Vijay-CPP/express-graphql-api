@@ -9,6 +9,7 @@ import { readFileSync } from "fs";
 import { ApolloServerPluginInlineTraceDisabled } from '@apollo/server/plugin/disabled';
 
 import { resolvers } from "./graphql/resolvers.js"
+import { schema } from "./graphql/schema.js"
 import { connectDB } from './config/db_connection.js';
 
 const PORT = process.env.PORT || 5050;
@@ -25,9 +26,12 @@ try {
 }
 
 const typeDefs = gql(
-    readFileSync("./graphql/schema.graphql", {
-        encoding: "utf-8",
-    })
+    // We cannot use this because in Vercel serverless deployment, 
+    // fs module doesn't work, so we directly import whole schema string
+    // readFileSync("./graphql/schema.graphql", {
+    //     encoding: "utf-8",
+    // })
+    schema
 );
 
 const server = new ApolloServer({
